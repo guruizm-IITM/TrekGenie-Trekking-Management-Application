@@ -39,25 +39,30 @@ The project structure is currently planned as follows and may be refined during 
 ```text
 tma_v2/
 │
-├── backend/
-│   ├── app.py
+backend/
+│
+├── application/
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── trek.py
+│   │   ├── booking.py
+│   │   └── staff_profile.py
+│   │
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── admin.py
+│   │   ├── staff.py
+│   │   └── trekker.py
+│   │
+│   ├── __init__.py
 │   ├── config.py
-│   ├── models.py
 │   ├── extensions.py
-│   ├── seed.py
-│   ├── requirements.txt
-│   └── instance/
+│   └── seed.py
 │
-├── frontend/
-│   ├── index.html
-│   ├── app.js
-│   └── components/
-│
-├── screenshots/
-│
-├── docs/
-│
-└── README.md
+├── requirements.txt
+└── run.py
 ```
 
 ## Planned Features
