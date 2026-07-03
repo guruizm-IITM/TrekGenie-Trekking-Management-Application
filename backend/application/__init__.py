@@ -3,6 +3,8 @@ from flask import Flask
 from application.config import Config
 from application.extensions import db, jwt
 from application.seed import create_admin
+from application.routes.auth import auth_bp
+from application.routes.admin import admin_bp
 
 
 def create_app():
@@ -20,6 +22,9 @@ def create_app():
 
         db.create_all()
         create_admin()
-        
+
+    # Register Blueprints
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
 
     return app
