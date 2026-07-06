@@ -481,3 +481,32 @@ def search():
         ]
 
     }), 200
+
+@admin_bp.route("/admin/bookings", methods=["GET"])
+@jwt_required()
+@role_required("admin")
+def get_bookings():
+
+    bookings = Booking.query.all()
+
+    result = []
+
+    for booking in bookings:
+
+        result.append({
+
+            "booking_id": booking.id,
+
+            "trekker": booking.user.name,
+
+            "trek": booking.trek.name,
+
+            "booking_status": booking.booking_status,
+
+            "payment_status": booking.payment_status,
+
+            "booking_date": booking.booking_date
+
+        })
+
+    return jsonify(result), 200

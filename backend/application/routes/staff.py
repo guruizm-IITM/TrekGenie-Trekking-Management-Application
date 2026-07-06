@@ -150,3 +150,40 @@ def update_slots(trek_id):
     return jsonify({
         "message": "Available slots updated successfully."
     }), 200
+
+@staff_bp.route("/staff/treks/<int:trek_id>/participants", methods=["GET"])
+@jwt_required()
+@role_required("staff")
+def view_participants(trek_id):
+
+    staff_id = int(get_jwt_identity())
+
+    trek = Trek.query.filter_by(
+        id=trek_id,
+        assigned_staff_id=staff_id
+    ).first()
+
+    if not trek:
+        return jsonify({
+            "message": "Trek not found."
+        }), 404
+
+    result = []
+
+    for booking in trek.bookings:
+
+        result.append({
+
+            "booking_id": booking.id,
+
+            "name": booking.user.name,
+
+            "email": booking.user.email,
+
+            "booking_status": booking.booking_status,
+
+            "payment_status": booking.payment_status
+
+        })
+
+    return jsonify(result), 200

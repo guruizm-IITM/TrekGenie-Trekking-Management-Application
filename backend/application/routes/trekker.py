@@ -82,3 +82,126 @@ def get_available_treks():
         })
 
     return jsonify(result), 200
+
+@trekker_bp.route("/trekker/bookings", methods=["POST"])
+@jwt_required()
+@role_required("trekker")
+def book_trek():
+
+    user_id = int(get_jwt_identity())
+
+    data = request.get_json()
+
+    if "trek_id" not in data:
+        return jsonify({
+            "message": "trek_id is required."
+        }), 400
+
+    trek = db.session.get(Trek, data["trek_id"])
+
+    if not trek:
+        return jsonify({
+            "message": "Trek not found."
+        }), 404
+
+    if trek.status != "Open":
+        return jsonify({
+            "message": "This trek is not open for booking."
+        }), 400
+
+    if trek.available_slots <= 0:
+        return jsonify({
+            "message": "No slots available."
+        }), 400
+
+    existing_booking = Booking.query.filter_by(
+        user_id=user_id,
+        trek_id=trek.id
+    ).first()
+
+    if existing_booking:
+        return jsonify({
+            "message": "You have already booked this trek."
+        }), 409
+
+    booking = Booking(
+        user_id=user_id,
+        trek_id=trek.id
+    )
+
+    trek.available_slots -= 1
+
+    db.session.add(booking)
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Trek booked successfully."
+    }), 201
+
+
+@trekker_bp.route("/trekker/bookings", methods=["GET"])
+@jwt_required()
+@role_required("trekker")
+def booking_history():
+
+    user_id = int(get_jwt_identity())
+
+    bookings = Booking.query.filter_by(
+        user_id=user_id
+    ).all()
+
+    result = []
+
+    for booking in bookings:
+
+        result.append({
+
+            "booking_id": booking.id,
+
+            "trek_name": booking.trek.name,
+
+            "location": booking.trek.location,
+
+            "booking_status": booking.booking_status,
+
+            "payment_status": booking.payment_status,
+
+            "booking_date": booking.booking_date
+
+        })
+
+    return jsonify(result), 200
+
+
+@trekker_bp.route("/trekker/bookings/<int:booking_id>/cancel", methods=["PATCH"])
+@jwt_required()
+@role_required("trekker")
+def cancel_booking(booking_id):
+
+    user_id = int(get_jwt_identity())
+
+    booking = Booking.query.filter_by(
+        id=booking_id,
+        user_id=user_id
+    ).first()
+
+    if not booking:
+        return jsonify({
+            "message": "Booking not found."
+        }), 404
+
+    if booking.booking_status == "Cancelled":
+        return jsonify({
+            "message": "Booking already cancelled."
+        }), 400
+
+    booking.booking_status = "Cancelled"
+
+    booking.trek.available_slots += 1
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Booking cancelled successfully."
+    }), 200
