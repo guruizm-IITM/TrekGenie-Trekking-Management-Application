@@ -71,6 +71,11 @@ def login():
             "message": "Invalid email or password."
         }), 401
     
+    if not user.active:
+        return jsonify({
+            "message": "Your account has been deactivated. Please contact the administrator."
+        }), 403
+    
     access_token = create_access_token(
         identity=str(user.id),
         additional_claims={

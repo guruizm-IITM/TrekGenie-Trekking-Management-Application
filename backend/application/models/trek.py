@@ -11,11 +11,17 @@ class Trek(db.Model):
 
     location = db.Column(db.String(150), nullable=False)
 
+    description = db.Column(db.Text)
+
     difficulty = db.Column(db.String(50), nullable=False)
 
     duration = db.Column(db.Integer, nullable=False)
 
     available_slots = db.Column(db.Integer, nullable=False)
+
+    start_date = db.Column(db.Date)
+
+    end_date = db.Column(db.Date)
 
     status = db.Column(db.String(30), default="Open")
 
