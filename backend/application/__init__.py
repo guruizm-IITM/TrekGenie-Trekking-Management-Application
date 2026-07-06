@@ -5,6 +5,8 @@ from application.extensions import db, jwt
 from application.seed import create_admin
 from application.routes.auth import auth_bp
 from application.routes.admin import admin_bp
+from application.routes.staff import staff_bp
+from application.routes.trekker import trekker_bp
 
 
 def create_app():
@@ -26,5 +28,7 @@ def create_app():
     # Register Blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(staff_bp)
+    app.register_blueprint(trekker_bp)
 
     return app
