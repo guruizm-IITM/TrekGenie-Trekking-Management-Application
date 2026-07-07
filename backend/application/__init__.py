@@ -7,6 +7,7 @@ from application.routes.auth import auth_bp
 from application.routes.admin import admin_bp
 from application.routes.staff import staff_bp
 from application.routes.trekker import trekker_bp
+from application.extensions import db, jwt, cors
 
 
 def create_app():
@@ -17,6 +18,15 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
+
+    cors.init_app(
+        app,
+        resources={
+            r"/*": {
+                "origins": "http://localhost:5173"
+            }
+        }
+    )
 
     with app.app_context():
 
