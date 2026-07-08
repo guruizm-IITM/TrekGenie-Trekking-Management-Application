@@ -2,6 +2,24 @@
 
 <div class="container mt-5">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <button
+            class="btn btn-outline-secondary"
+            @click="router.push('/admin')"
+        >
+            ← Dashboard
+        </button>
+
+        <button
+            class="btn btn-danger"
+            @click="logout"
+        >
+            Logout
+        </button>
+
+    </div>
+
     <h2>Staff Management</h2>
 
     <div class="card p-4 mb-4">
@@ -100,6 +118,7 @@
 
 <script setup>
 
+import { useRouter } from "vue-router"
 import { ref, onMounted } from "vue"
 import api from "../services/api"
 
@@ -116,6 +135,8 @@ const form = ref({
     phone: ""
 
 })
+
+const router = useRouter()
 
 async function loadStaff() {
 
@@ -160,6 +181,14 @@ async function toggleStatus(staff) {
     )
 
     loadStaff()
+
+}
+
+function logout() {
+
+    localStorage.clear()
+
+    router.push("/")
 
 }
 

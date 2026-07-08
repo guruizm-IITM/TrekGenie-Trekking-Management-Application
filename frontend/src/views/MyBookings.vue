@@ -6,7 +6,7 @@
 
         <button
             class="btn btn-outline-secondary"
-            @click="router.push('/admin')"
+            @click="router.push('/trekker')"
         >
             ← Dashboard
         </button>
@@ -20,9 +20,9 @@
 
     </div>
 
-    <h2>Bookings</h2>
+    <h2>My Bookings</h2>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped mt-4">
 
         <thead>
 
@@ -30,15 +30,15 @@
 
                 <th>ID</th>
 
-                <th>Trekker</th>
-
                 <th>Trek</th>
+
+                <th>Location</th>
 
                 <th>Booking Status</th>
 
-                <th>Payment</th>
+                <th>Payment Status</th>
 
-                <th>Date</th>
+                <th>Booking Date</th>
 
             </tr>
 
@@ -53,9 +53,9 @@
 
                 <td>{{ booking.booking_id }}</td>
 
-                <td>{{ booking.trekker }}</td>
+                <td>{{ booking.trek_name }}</td>
 
-                <td>{{ booking.trek }}</td>
+                <td>{{ booking.location }}</td>
 
                 <td>{{ booking.booking_status }}</td>
 
@@ -75,19 +75,19 @@
 
 <script setup>
 
-import { useRouter } from "vue-router"
-
 import { ref, onMounted } from "vue"
+
+import { useRouter } from "vue-router"
 
 import api from "../services/api"
 
-const bookings = ref([])
-
 const router = useRouter()
+
+const bookings = ref([])
 
 async function loadBookings() {
 
-    const response = await api.get("/admin/bookings")
+    const response = await api.get("/trekker/bookings")
 
     bookings.value = response.data
 

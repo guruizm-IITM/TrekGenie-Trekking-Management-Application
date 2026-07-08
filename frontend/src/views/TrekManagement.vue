@@ -2,6 +2,24 @@
 
 <div class="container mt-5">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <button
+            class="btn btn-outline-secondary"
+            @click="router.push('/admin')"
+        >
+            ← Dashboard
+        </button>
+
+        <button
+            class="btn btn-danger"
+            @click="logout"
+        >
+            Logout
+        </button>
+
+    </div>
+
     <h2>Trek Management</h2>
 
     <div class="card p-4 mb-4">
@@ -159,6 +177,8 @@
 
 <script setup>
 
+import { useRouter } from "vue-router"
+
 import { ref, onMounted } from "vue"
 
 import api from "../services/api"
@@ -186,6 +206,8 @@ const form = ref({
     end_date: ""
 
 })
+
+const router = useRouter()
 
 async function loadTreks() {
 
@@ -306,6 +328,14 @@ async function assignStaff(trek) {
         console.log(error)
 
     }
+
+}
+
+function logout() {
+
+    localStorage.clear()
+
+    router.push("/")
 
 }
 

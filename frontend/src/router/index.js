@@ -10,6 +10,8 @@ import TrekManagement from "../views/TrekManagement.vue";
 import StaffManagement from "../views/StaffManagement.vue";
 import Users from "../views/Users.vue"
 import Bookings from "../views/Bookings.vue"
+import BrowseTreks from "../views/BrowseTreks.vue"
+import MyBookings from "../views/MyBookings.vue"
 
 
 const routes = [
@@ -74,9 +76,19 @@ const routes = [
 
     {
         path: "/admin/bookings",
-        
+
         component: Bookings
-    }
+    },
+
+    {
+        path: "/trekker/treks",
+        component: BrowseTreks
+    },
+    
+    {
+        path: "/trekker/bookings",
+        component: MyBookings
+    },
 
 ];
 

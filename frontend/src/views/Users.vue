@@ -2,6 +2,24 @@
 
 <div class="container mt-5">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <button
+            class="btn btn-outline-secondary"
+            @click="router.push('/admin')"
+        >
+            ← Dashboard
+        </button>
+
+        <button
+            class="btn btn-danger"
+            @click="logout"
+        >
+            Logout
+        </button>
+
+    </div>
+
     <h2>Users</h2>
 
     <table class="table table-bordered table-striped">
@@ -26,7 +44,7 @@
 
         <tbody>
 
-            <<tr
+            <tr
                 v-for="user in users"
                 :key="user.id"
             >
@@ -53,17 +71,29 @@
 
 <script setup>
 
+import { useRouter } from "vue-router"
+
 import { ref, onMounted } from "vue"
 
 import api from "../services/api"
 
 const users = ref([])
 
+const router = useRouter()
+
 async function loadUsers() {
 
     const response = await api.get("/admin/users")
 
     users.value = response.data
+
+}
+
+function logout() {
+
+    localStorage.clear()
+
+    router.push("/")
 
 }
 
