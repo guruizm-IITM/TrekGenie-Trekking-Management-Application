@@ -202,7 +202,13 @@ def get_treks():
 
             "start_date": trek.start_date,
 
-            "end_date": trek.end_date
+            "end_date": trek.end_date,
+
+            "assigned_staff": (
+                trek.assigned_staff.name
+                if trek.assigned_staff
+                else "Not Assigned"
+            )
 
         })
 
@@ -244,7 +250,8 @@ def get_trek(trek_id):
 
         "start_date": trek.start_date,
 
-        "end_date": trek.end_date
+        "end_date": trek.end_date,
+        
 
     }), 200
 
