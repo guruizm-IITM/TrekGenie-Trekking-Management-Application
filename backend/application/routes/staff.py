@@ -186,4 +186,10 @@ def view_participants(trek_id):
 
         })
 
-    return jsonify(result), 200
+    return jsonify({
+
+        "trek_name": trek.name,
+
+        "participants": result
+
+    }), 200
