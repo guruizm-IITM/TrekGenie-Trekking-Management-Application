@@ -205,3 +205,49 @@ def cancel_booking(booking_id):
     return jsonify({
         "message": "Booking cancelled successfully."
     }), 200
+
+@trekker_bp.route("/trekker/profile", methods=["GET"])
+@jwt_required()
+@role_required("trekker")
+def get_profile():
+
+    user_id = int(get_jwt_identity())
+
+    user = db.session.get(User, user_id)
+
+    return jsonify({
+
+        "name": user.name,
+
+        "email": user.email,
+
+        "phone": user.phone
+
+    }), 200
+
+@trekker_bp.route("/trekker/profile", methods=["PATCH"])
+@jwt_required()
+@role_required("trekker")
+def update_profile():
+
+    user_id = int(get_jwt_identity())
+
+    user = db.session.get(User, user_id)
+
+    data = request.get_json()
+
+    if "name" in data:
+
+        user.name = data["name"]
+
+    if "phone" in data:
+
+        user.phone = data["phone"]
+
+    db.session.commit()
+
+    return jsonify({
+
+        "message": "Profile updated successfully."
+
+    }), 200

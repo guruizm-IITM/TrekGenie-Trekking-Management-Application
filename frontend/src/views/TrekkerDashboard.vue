@@ -26,10 +26,18 @@
 
         <router-link
             to="/trekker/bookings"
-            class="btn btn-success"
+            class="btn btn-success me-2"
         >
             My Bookings
         </router-link>
+
+        <router-link
+            to="/trekker/profile"
+            class="btn btn-success"
+        >
+            Profile
+        </router-link>
+
 
     </div>
 

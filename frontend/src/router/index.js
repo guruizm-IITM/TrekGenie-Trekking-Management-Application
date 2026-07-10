@@ -14,6 +14,7 @@ import BrowseTreks from "../views/BrowseTreks.vue"
 import MyBookings from "../views/MyBookings.vue"
 import MyTreks from "../views/MyTreks.vue"
 import Participants from "../views/Participants.vue"
+import Profile from "../views/Profile.vue"
 
 
 const routes = [
@@ -101,6 +102,11 @@ const routes = [
     {
         path: "/staff/treks/:trekId/participants",
         component: Participants
+    },
+
+    {
+        path: "/trekker/profile",
+        component: Profile
     },
 
 ];
