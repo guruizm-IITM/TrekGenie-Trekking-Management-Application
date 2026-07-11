@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request
 from application.extensions import cache
-from application.tasks import export_booking_history
 
 from flask_jwt_extended import (
     jwt_required,
@@ -301,6 +300,8 @@ def update_profile():
 def export_history():
 
     user_id = int(get_jwt_identity())
+
+    from application.tasks import export_booking_history
 
     export_booking_history.delay(user_id)
 

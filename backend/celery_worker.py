@@ -1,33 +1,10 @@
-from celery import Celery
-
 from application import create_app
-
+from application.extensions import celery
 
 app = create_app()
 
 
-celery = Celery(
-
-    "trekking",
-
-    broker="redis://localhost:6379/0",
-
-    backend="redis://localhost:6379/0",
-
-    include=[
-
-        "application.tasks"
-
-    ]
-
-)
-
-celery.conf.timezone = "Asia/Kolkata"
-
-celery.conf.enable_utc = False
-
-
-class ContextTask(celery.Task):
+class FlaskTask(celery.Task):
 
     def __call__(self, *args, **kwargs):
 
@@ -36,4 +13,4 @@ class ContextTask(celery.Task):
             return self.run(*args, **kwargs)
 
 
-celery.Task = ContextTask
+celery.Task = FlaskTask

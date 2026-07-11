@@ -5,7 +5,7 @@ from application.routes.auth import auth_bp
 from application.routes.admin import admin_bp
 from application.routes.staff import staff_bp
 from application.routes.trekker import trekker_bp
-from application.extensions import db, jwt, cors, cache
+from application.extensions import db, jwt, cors, cache, celery
 
 
 def create_app():
@@ -21,6 +21,14 @@ def create_app():
     app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 
     cache.init_app(app)
+
+    celery.conf.update(
+        broker_url="redis://localhost:6379/0",
+        result_backend="redis://localhost:6379/0",
+        timezone="Asia/Kolkata",
+        enable_utc=False,
+        imports=("application.tasks",),
+    )
 
     db.init_app(app)
     jwt.init_app(app)
