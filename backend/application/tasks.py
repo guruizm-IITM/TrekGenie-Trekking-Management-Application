@@ -8,6 +8,10 @@ from application.exports import generate_booking_csv
 
 from application.mail import send_email
 
+from datetime import date, timedelta
+
+from application.models import Booking, Trek
+
 
 @celery.task
 def test_task():
@@ -49,3 +53,54 @@ def export_booking_history(user_id):
     )
 
     return "Export completed successfully."
+
+
+@celery.task
+def send_daily_reminders():
+
+    tomorrow = date.today() + timedelta(days=1)
+
+    bookings = (
+        Booking.query
+        .join(Trek)
+        .filter(
+            Trek.start_date == tomorrow,
+            Booking.booking_status == "Booked"
+        )
+        .all()
+    )
+
+    for booking in bookings:
+
+        send_email(
+
+            recipient=booking.user.email,
+
+            subject="Upcoming Trek Reminder",
+
+            html_body=f"""
+            <h2>Your trek starts tomorrow!</h2>
+
+            <p><b>Trek:</b> {booking.trek.name}</p>
+
+            <p><b>Location:</b> {booking.trek.location}</p>
+
+            <p><b>Start Date:</b> {booking.trek.start_date}</p>
+
+            <br>
+
+            <h3>Things to carry</h3>
+
+            <ul>
+                <li>Water Bottle</li>
+                <li>ID Proof</li>
+                <li>Trekking Shoes</li>
+                <li>Rain Protection (if required)</li>
+            </ul>
+
+            <p>Happy Trekking!</p>
+            """
+
+        )
+
+    return f"{len(bookings)} reminder(s) sent."
