@@ -5,7 +5,7 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
-from application.extensions import db
+from application.extensions import db, cache
 from application.models import User, Trek
 from application.auth_utils import role_required
 
@@ -115,6 +115,8 @@ def update_trek_status(trek_id):
 
     db.session.commit()
 
+    cache.clear()
+
     return jsonify({
         "message": "Status updated successfully."
     }), 200
@@ -146,6 +148,8 @@ def update_slots(trek_id):
     trek.available_slots = data["available_slots"]
 
     db.session.commit()
+
+    cache.clear()
 
     return jsonify({
         "message": "Available slots updated successfully."

@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+from application.extensions import cache
+from application.tasks import export_booking_history
 
 from flask_jwt_extended import (
     jwt_required,
@@ -51,11 +53,51 @@ def dashboard():
 @trekker_bp.route("/trekker/treks", methods=["GET"])
 @jwt_required()
 @role_required("trekker")
+@cache.cached(timeout=300, query_string=True)
 def get_available_treks():
+
+    name = request.args.get("name")
+    location = request.args.get("location")
+    difficulty = request.args.get("difficulty")
+    duration = request.args.get("duration")
 
     treks = Trek.query.filter_by(
         status="Open"
-    ).all()
+    )
+
+    if name:
+
+        treks = treks.filter(
+            Trek.name.ilike(f"%{name}%")
+        )
+
+    if location:
+
+        treks = treks.filter(
+            Trek.location.ilike(f"%{location}%")
+        )
+
+    if difficulty:
+
+        treks = treks.filter_by(
+            difficulty=difficulty
+        )
+
+    if duration:
+
+        try:
+
+            treks = treks.filter_by(
+                duration=int(duration)
+            )
+
+        except ValueError:
+
+            return jsonify({
+                "message": "Duration must be a number."
+            }), 400
+
+    treks = treks.all()
 
     result = []
 
@@ -251,3 +293,19 @@ def update_profile():
         "message": "Profile updated successfully."
 
     }), 200
+
+
+@trekker_bp.route("/trekker/export", methods=["POST"])
+@jwt_required()
+@role_required("trekker")
+def export_history():
+
+    user_id = int(get_jwt_identity())
+
+    export_booking_history.delay(user_id)
+
+    return jsonify({
+
+        "message": "Booking history export started."
+
+    }), 202

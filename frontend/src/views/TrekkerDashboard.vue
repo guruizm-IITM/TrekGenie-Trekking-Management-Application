@@ -33,11 +33,17 @@
 
         <router-link
             to="/trekker/profile"
-            class="btn btn-success"
+            class="btn btn-success me-2"
         >
             Profile
         </router-link>
 
+        <button
+            class="btn btn-warning"
+            @click="exportHistory"
+        >
+            Export Booking History
+        </button>
 
     </div>
 
@@ -105,6 +111,16 @@ async function loadDashboard() {
     const response = await api.get("/trekker/dashboard")
 
     dashboard.value = response.data
+
+}
+
+async function exportHistory() {
+
+    const response = await api.post(
+        "/trekker/export"
+    )
+
+    alert(response.data.message)
 
 }
 

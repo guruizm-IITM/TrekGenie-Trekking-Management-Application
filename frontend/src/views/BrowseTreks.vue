@@ -22,7 +22,85 @@
 
     <h2>Available Treks</h2>
 
-    <table class="table table-bordered table-striped mt-4">
+    <div class="card p-3 mt-4 mb-4">
+
+        <h5>Search & Filter</h5>
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <input
+                    v-model="filters.name"
+                    class="form-control"
+                    placeholder="Trek Name"
+                >
+
+            </div>
+
+            <div class="col-md-3">
+
+                <input
+                    v-model="filters.location"
+                    class="form-control"
+                    placeholder="Location"
+                >
+
+            </div>
+
+            <div class="col-md-2">
+
+                <select
+                    v-model="filters.difficulty"
+                    class="form-select"
+                >
+
+                    <option value="">Difficulty</option>
+
+                    <option>Easy</option>
+
+                    <option>Moderate</option>
+
+                    <option>Hard</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <input
+                    type="number"
+                    v-model="filters.duration"
+                    class="form-control"
+                    placeholder="Duration"
+                >
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button
+                    class="btn btn-primary me-2"
+                    @click="loadTreks"
+                >
+                    Search
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    @click="clearFilters"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <table class="table table-bordered table-striped">
 
         <thead>
 
@@ -102,11 +180,61 @@ const router = useRouter()
 
 const treks = ref([])
 
+const filters = ref({
+
+    name: "",
+
+    location: "",
+
+    difficulty: "",
+
+    duration: ""
+
+})
+
 async function loadTreks() {
 
-    const response = await api.get("/trekker/treks")
+    const response = await api.get(
+
+        "/trekker/treks",
+
+        {
+
+            params: {
+
+                name: filters.value.name,
+
+                location: filters.value.location,
+
+                difficulty: filters.value.difficulty,
+
+                duration: filters.value.duration
+
+            }
+
+        }
+
+    )
 
     treks.value = response.data
+
+}
+
+function clearFilters() {
+
+    filters.value = {
+
+        name: "",
+
+        location: "",
+
+        difficulty: "",
+
+        duration: ""
+
+    }
+
+    loadTreks()
 
 }
 

@@ -1,13 +1,11 @@
 from flask import Flask
-
 from application.config import Config
-from application.extensions import db, jwt
 from application.seed import create_admin
 from application.routes.auth import auth_bp
 from application.routes.admin import admin_bp
 from application.routes.staff import staff_bp
 from application.routes.trekker import trekker_bp
-from application.extensions import db, jwt, cors
+from application.extensions import db, jwt, cors, cache
 
 
 def create_app():
@@ -15,6 +13,14 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object(Config)
+
+    app.config["CACHE_TYPE"] = "RedisCache"
+
+    app.config["CACHE_REDIS_URL"] = "redis://localhost:6379/0"
+
+    app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+
+    cache.init_app(app)
 
     db.init_app(app)
     jwt.init_app(app)
