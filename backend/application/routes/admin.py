@@ -536,3 +536,18 @@ def test_reminder():
         "message": "Reminder task started."
 
     }), 202
+
+@admin_bp.route("/admin/test-report", methods=["POST"])
+@jwt_required()
+@role_required("admin")
+def test_report():
+
+    from application.tasks import send_monthly_report
+
+    send_monthly_report.delay()
+
+    return jsonify({
+
+        "message": "Monthly report started."
+
+    }), 202

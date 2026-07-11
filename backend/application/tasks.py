@@ -2,7 +2,7 @@ from application.extensions import celery
 
 from application.extensions import db
 
-from application.models import User
+from application.models import User, Trek, Booking
 
 from application.exports import generate_booking_csv
 
@@ -11,6 +11,8 @@ from application.mail import send_email
 from datetime import date, timedelta
 
 from application.models import Booking, Trek
+
+from sqlalchemy import func
 
 
 @celery.task
@@ -104,3 +106,84 @@ def send_daily_reminders():
         )
 
     return f"{len(bookings)} reminder(s) sent."
+
+@celery.task
+def send_monthly_report():
+
+    total_treks = Trek.query.count()
+
+    total_bookings = Booking.query.count()
+
+    total_users = (
+        db.session.query(
+            func.count(
+                func.distinct(
+                    Booking.user_id
+                )
+            )
+        ).scalar()
+    )
+
+    popular = (
+        db.session.query(
+
+            Trek.name,
+
+            func.count(
+                Booking.id
+            ).label("bookings")
+
+        )
+        .join(Booking)
+        .group_by(Trek.id)
+        .order_by(
+            func.count(
+                Booking.id
+            ).desc()
+        )
+        .first()
+    )
+
+    popular_name = "N/A"
+
+    popular_count = 0
+
+    if popular:
+
+        popular_name = popular[0]
+
+        popular_count = popular[1]
+
+    html = f"""
+
+    <h1>🏔 Monthly Trekking Report</h1>
+
+    <hr>
+
+    <p><b>Total Treks Conducted:</b> {total_treks}</p>
+
+    <p><b>Total Participants:</b> {total_users}</p>
+
+    <p><b>Total Bookings:</b> {total_bookings}</p>
+
+    <p><b>Most Popular Trek:</b> {popular_name}</p>
+
+    <p><b>Total Bookings:</b> {popular_count}</p>
+
+    <hr>
+
+    <p>Generated automatically using Celery.</p>
+
+    """
+
+    send_email(
+
+        recipient="admin@trek.com",
+
+        subject="Monthly Trekking Activity Report",
+
+        html_body=html
+
+    )
+
+    return "Monthly report sent."
