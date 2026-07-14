@@ -6,6 +6,8 @@ from application.routes.admin import admin_bp
 from application.routes.staff import staff_bp
 from application.routes.trekker import trekker_bp
 from application.extensions import db, jwt, cors, cache, celery
+from celery.schedules import crontab
+
 
 
 def create_app():
@@ -23,11 +25,37 @@ def create_app():
     cache.init_app(app)
 
     celery.conf.update(
+
         broker_url="redis://localhost:6379/0",
+
         result_backend="redis://localhost:6379/0",
+
         timezone="Asia/Kolkata",
+
         enable_utc=False,
+
         imports=("application.tasks",),
+
+        beat_schedule={
+
+            "daily-trek-reminders": {
+
+                "task": "application.tasks.send_daily_reminders",
+
+                "schedule": crontab("*/1"),
+
+            },
+
+            "monthly-report": {
+
+                "task": "application.tasks.send_monthly_report",
+
+                "schedule": crontab("*/2"),
+
+            },
+
+        }
+
     )
 
     db.init_app(app)

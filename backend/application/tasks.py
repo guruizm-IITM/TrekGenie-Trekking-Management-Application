@@ -1,18 +1,11 @@
-from application.extensions import celery
-
-from application.extensions import db
-
-from application.models import User, Trek, Booking
-
-from application.exports import generate_booking_csv
-
-from application.mail import send_email
-
 from datetime import date, timedelta
 
-from application.models import Booking, Trek
-
 from sqlalchemy import func
+
+from application.extensions import celery, db
+from application.exports import generate_booking_csv
+from application.mail import send_email
+from application.models import User, Trek, Booking
 
 
 @celery.task
@@ -38,16 +31,40 @@ def export_booking_history(user_id):
 
         recipient=user.email,
 
-        subject="Your Booking History",
+        subject="Your TrekGenie Booking History",
 
         html_body="""
-        <h2>Booking History Export</h2>
+        <h2>🏔 TrekGenie</h2>
 
-        <p>Your booking history has been exported successfully.</p>
+        <p>Hello,</p>
 
-        <p>Please find the attached CSV.</p>
+        <p>
+        Your booking history has been successfully exported.
+        </p>
 
-        <p>Happy Trekking!</p>
+        <p>
+        Please find the attached CSV file containing your booking history.
+        </p>
+
+        <p>
+        Thank you for choosing <b>TrekGenie</b>.
+        We look forward to helping you plan your next adventure!
+        </p>
+
+        <br>
+
+        <p>
+        Regards,<br>
+        <b>TrekGenie Team</b><br>
+        Adventure Begins Here.
+        </p>
+
+        <hr>
+
+        <small style="color:gray;">
+        This is an automated email from TrekGenie.
+        Please do not reply to this email.
+        </small>
         """,
 
         attachment_path=csv_file
@@ -63,13 +80,21 @@ def send_daily_reminders():
     tomorrow = date.today() + timedelta(days=1)
 
     bookings = (
+
         Booking.query
+
         .join(Trek)
+
         .filter(
+
             Trek.start_date == tomorrow,
+
             Booking.booking_status == "Booked"
+
         )
+
         .all()
+
     )
 
     for booking in bookings:
@@ -78,34 +103,92 @@ def send_daily_reminders():
 
             recipient=booking.user.email,
 
-            subject="Upcoming Trek Reminder",
+            subject="🏔 Trek Reminder - TrekGenie",
 
             html_body=f"""
-            <h2>Your trek starts tomorrow!</h2>
+            <h2>🏔 TrekGenie</h2>
 
-            <p><b>Trek:</b> {booking.trek.name}</p>
+            <p>Hello {booking.user.name},</p>
 
-            <p><b>Location:</b> {booking.trek.location}</p>
+            <p>
+            Your adventure begins tomorrow!
+            This is a friendly reminder for your upcoming trek.
+            </p>
 
-            <p><b>Start Date:</b> {booking.trek.start_date}</p>
+            <hr>
+
+            <p>
+
+            <b>Trek:</b> {booking.trek.name}<br>
+
+            <b>Location:</b> {booking.trek.location}<br>
+
+            <b>Start Date:</b> {booking.trek.start_date}<br>
+
+            <b>Booking Status:</b> {booking.booking_status}<br>
+
+            <b>Payment Status:</b> {booking.payment_status}
+
+            </p>
+
+            <hr>
+
+            <h3>Things to Carry</h3>
+
+            <ul>
+
+                <li>Water Bottle</li>
+
+                <li>Government Photo ID</li>
+
+                <li>Trekking Shoes</li>
+
+                <li>Rain Protection (if required)</li>
+
+            </ul>
+
+            <p>
+
+            Please arrive at the reporting location at least
+            <b>30 minutes before departure.</b>
+
+            </p>
+
+            <p>
+
+            We wish you a safe and memorable trekking experience.
+
+            Happy Trekking!
+
+            </p>
 
             <br>
 
-            <h3>Things to carry</h3>
+            <p>
 
-            <ul>
-                <li>Water Bottle</li>
-                <li>ID Proof</li>
-                <li>Trekking Shoes</li>
-                <li>Rain Protection (if required)</li>
-            </ul>
+            Regards,<br>
 
-            <p>Happy Trekking!</p>
+            <b>TrekGenie Team</b><br>
+
+            Adventure Begins Here.
+
+            </p>
+
+            <hr>
+
+            <small style="color:gray;">
+
+            This is an automated email from TrekGenie.
+
+            Please do not reply to this email.
+
+            </small>
             """
 
         )
 
     return f"{len(bookings)} reminder(s) sent."
+
 
 @celery.task
 def send_monthly_report():
@@ -115,33 +198,53 @@ def send_monthly_report():
     total_bookings = Booking.query.count()
 
     total_users = (
+
         db.session.query(
+
             func.count(
+
                 func.distinct(
+
                     Booking.user_id
+
                 )
+
             )
+
         ).scalar()
+
     )
 
     popular = (
+
         db.session.query(
 
             Trek.name,
 
             func.count(
+
                 Booking.id
+
             ).label("bookings")
 
         )
+
         .join(Booking)
+
         .group_by(Trek.id)
+
         .order_by(
+
             func.count(
+
                 Booking.id
+
             ).desc()
+
         )
+
         .first()
+
     )
 
     popular_name = "N/A"
@@ -156,7 +259,15 @@ def send_monthly_report():
 
     html = f"""
 
-    <h1>🏔 Monthly Trekking Report</h1>
+    <h2>🏔 TrekGenie</h2>
+
+    <p>Hello Administrator,</p>
+
+    <p>
+
+    Please find below your monthly trekking activity summary.
+
+    </p>
 
     <hr>
 
@@ -168,19 +279,46 @@ def send_monthly_report():
 
     <p><b>Most Popular Trek:</b> {popular_name}</p>
 
-    <p><b>Total Bookings:</b> {popular_count}</p>
+    <p><b>Total Bookings for Most Popular Trek:</b> {popular_count}</p>
 
     <hr>
 
-    <p>Generated automatically using Celery.</p>
+    <p>
+
+    This report has been generated automatically by the
+    TrekGenie reporting system.
+
+    </p>
+
+    <br>
+
+    <p>
+
+    Regards,<br>
+
+    <b>TrekGenie Team</b><br>
+
+    Adventure Begins Here.
+
+    </p>
+
+    <hr>
+
+    <small style="color:gray;">
+
+    This is an automated email from TrekGenie.
+
+    Please do not reply to this email.
+
+    </small>
 
     """
 
     send_email(
 
-        recipient="admin@trek.com",
+        recipient="admin@trekgenie.com",
 
-        subject="Monthly Trekking Activity Report",
+        subject="🏔 Monthly TrekGenie Activity Report",
 
         html_body=html
 
