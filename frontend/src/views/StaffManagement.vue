@@ -60,6 +60,21 @@
 
     </div>
 
+
+    <div class="row mb-3">
+
+        <div class="col-md-5">
+
+            <input
+                v-model="search"
+                class="form-control"
+                placeholder="Search staff..."
+            >
+
+        </div>
+
+    </div>
+
     <table class="table table-bordered table-striped">
 
         <thead>
@@ -83,7 +98,7 @@
         <tbody>
 
             <tr
-                v-for="staff in staffList"
+                v-for="staff in filteredStaff"
                 :key="staff.id"
             >
 
@@ -119,10 +134,12 @@
 <script setup>
 
 import { useRouter } from "vue-router"
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import api from "../services/api"
 
 const staffList = ref([])
+
+const search = ref("")
 
 const form = ref({
 
@@ -137,6 +154,28 @@ const form = ref({
 })
 
 const router = useRouter()
+
+const filteredStaff = computed(() => {
+
+    if (!search.value.trim()) {
+
+        return staffList.value
+
+    }
+
+    const query = search.value.toLowerCase()
+
+    return staffList.value.filter(staff =>
+
+        staff.name.toLowerCase().includes(query) ||
+
+        staff.email.toLowerCase().includes(query) ||
+
+        staff.phone.toLowerCase().includes(query)
+
+    )
+
+})
 
 async function loadStaff() {
 

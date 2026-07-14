@@ -4,7 +4,31 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2>Welcome {{ name }}</h2>
+        <div class="d-flex align-items-center">
+
+            <img
+                src="../assets/logo-icon.png"
+                class="admin-logo me-3"
+                alt="TrekGenie"
+            >
+
+            <div>
+
+                <h3 class="mb-0">
+
+                    Welcome, {{ name }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Administrator Portal
+
+                </small>
+
+            </div>
+
+        </div>
 
         <button
             class="btn btn-danger"
@@ -123,3 +147,16 @@ function logout() {
 }
 
 </script>
+
+<style scoped>
+
+.admin-logo{
+
+    width:75px;
+
+    height:auto;
+
+}
+
+</style>
+

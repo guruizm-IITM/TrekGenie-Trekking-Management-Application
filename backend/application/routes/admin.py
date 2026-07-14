@@ -105,6 +105,41 @@ def update_staff_status(staff_id):
         "message": "Staff status updated successfully."
     }), 200
 
+
+
+@admin_bp.route("/admin/users/<int:user_id>/status", methods=["PATCH"])
+@jwt_required()
+@role_required("admin")
+def update_user_status(user_id):
+
+    data = request.get_json()
+
+    if "active" not in data:
+
+        return jsonify({
+            "message": "active field is required."
+        }), 400
+
+    user = User.query.filter_by(
+        id=user_id,
+        role="trekker"
+    ).first()
+
+    if not user:
+
+        return jsonify({
+            "message": "User not found."
+        }), 404
+
+    user.active = data["active"]
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "User status updated successfully."
+    }), 200
+
+
 @admin_bp.route("/admin/treks", methods=["POST"])
 @jwt_required()
 @role_required("admin")

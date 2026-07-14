@@ -4,60 +4,94 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2>Welcome {{ name }}</h2>
+        <div class="d-flex align-items-center">
+
+            <img
+                src="../assets/logo-icon.png"
+                class="dashboard-logo me-3"
+                alt="TrekGenie"
+            >
+
+            <div>
+
+                <h3 class="mb-0">
+
+                    Welcome, {{ name }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Explorer Dashboard
+
+                </small>
+
+            </div>
+
+        </div>
 
         <button
             class="btn btn-danger"
             @click="logout"
         >
-            Logout
+            Sign Out
         </button>
 
     </div>
 
-    <div class="mb-4">
+    <p class="text-muted mb-4">
+
+        Browse exciting trekking adventures, manage your bookings and keep your profile up to date.
+
+    </p>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
 
         <router-link
             to="/trekker/treks"
-            class="btn btn-primary me-2"
+            class="btn btn-success"
         >
-            Browse Treks
+            🏔 Browse Treks
         </router-link>
 
         <router-link
             to="/trekker/bookings"
-            class="btn btn-success me-2"
+            class="btn btn-primary"
         >
-            My Bookings
+            📋 My Bookings
         </router-link>
 
         <router-link
             to="/trekker/profile"
-            class="btn btn-success me-2"
+            class="btn btn-secondary"
         >
-            Profile
+            👤 Profile
         </router-link>
 
         <button
             class="btn btn-warning"
             @click="exportHistory"
         >
-            Export Booking History
+            📥 Export Booking History
         </button>
 
     </div>
 
     <hr>
 
-    <div class="row">
+    <div class="row g-4">
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>Available Treks</h5>
 
-                <h3>{{ dashboard.available_treks }}</h3>
+                <h2 class="text-success fw-bold">
+
+                    {{ dashboard.available_treks }}
+
+                </h2>
 
             </div>
 
@@ -65,11 +99,15 @@
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>My Bookings</h5>
 
-                <h3>{{ dashboard.my_bookings }}</h3>
+                <h2 class="text-primary fw-bold">
+
+                    {{ dashboard.my_bookings }}
+
+                </h2>
 
             </div>
 
@@ -77,11 +115,15 @@
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>Completed Treks</h5>
 
-                <h3>{{ dashboard.completed_treks }}</h3>
+                <h2 class="text-secondary fw-bold">
+
+                    {{ dashboard.completed_treks }}
+
+                </h2>
 
             </div>
 
@@ -139,3 +181,15 @@ onMounted(() => {
 })
 
 </script>
+
+<style scoped>
+
+.dashboard-logo{
+
+    width:70px;
+
+    height:auto;
+
+}
+
+</style>

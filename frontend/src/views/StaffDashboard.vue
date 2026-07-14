@@ -4,7 +4,31 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2>Welcome {{ name }}</h2>
+        <div class="d-flex align-items-center">
+
+            <img
+                src="../assets/logo-icon.png"
+                class="dashboard-logo me-3"
+                alt="TrekGenie"
+            >
+
+            <div>
+
+                <h3 class="mb-0">
+
+                    Welcome, {{ name }}
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Staff Portal
+
+                </small>
+
+            </div>
+
+        </div>
 
         <button
             class="btn btn-danger"
@@ -15,28 +39,38 @@
 
     </div>
 
-    <div class="mb-4">
+    <p class="text-muted mb-4">
+
+        View your assigned treks and manage trekking activities.
+
+    </p>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
 
         <router-link
             to="/staff/treks"
-            class="btn btn-primary"
+            class="btn btn-success"
         >
-            My Treks
+            🏔 My Treks
         </router-link>
 
     </div>
 
     <hr>
 
-    <div class="row">
+    <div class="row g-4">
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>Assigned Treks</h5>
 
-                <h3>{{ dashboard.assigned_treks }}</h3>
+                <h2 class="text-primary fw-bold">
+
+                    {{ dashboard.assigned_treks }}
+
+                </h2>
 
             </div>
 
@@ -44,11 +78,15 @@
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>Active Treks</h5>
 
-                <h3>{{ dashboard.active_treks }}</h3>
+                <h2 class="text-success fw-bold">
+
+                    {{ dashboard.active_treks }}
+
+                </h2>
 
             </div>
 
@@ -56,11 +94,15 @@
 
         <div class="col-md-4">
 
-            <div class="card p-3">
+            <div class="card shadow-sm text-center p-4 h-100">
 
                 <h5>Completed Treks</h5>
 
-                <h3>{{ dashboard.completed_treks }}</h3>
+                <h2 class="text-secondary fw-bold">
+
+                    {{ dashboard.completed_treks }}
+
+                </h2>
 
             </div>
 
@@ -109,3 +151,15 @@ onMounted(() => {
 })
 
 </script>
+
+<style scoped>
+
+.dashboard-logo{
+
+    width:70px;
+
+    height:auto;
+
+}
+
+</style>
