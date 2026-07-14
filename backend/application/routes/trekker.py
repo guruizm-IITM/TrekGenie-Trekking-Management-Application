@@ -310,3 +310,30 @@ def export_history():
         "message": "Booking history export started."
 
     }), 202
+
+
+@trekker_bp.route("/trekker/bookings/<int:booking_id>/payment", methods=["PATCH"])
+@jwt_required()
+@role_required("trekker")
+def update_payment_status(booking_id):
+
+    user_id = get_jwt_identity()
+
+    booking = Booking.query.filter_by(
+        id=booking_id,
+        user_id=user_id
+    ).first()
+
+    if not booking:
+
+        return jsonify({
+            "message": "Booking not found."
+        }), 404
+
+    booking.payment_status = "Paid"
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Payment completed successfully."
+    }), 200
