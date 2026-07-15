@@ -245,7 +245,7 @@ def seed_treks():
 
             "end_date": today + timedelta(days=2),
 
-            "status": "Upcoming",
+            "status": "Open",
 
             "staff": "rahul@trekgenie.com"
 
@@ -269,7 +269,7 @@ def seed_treks():
 
             "end_date": today + timedelta(days=7),
 
-            "status": "Upcoming",
+            "status": "Open",
 
             "staff": "rahul@trekgenie.com"
 
@@ -317,7 +317,7 @@ def seed_treks():
 
             "end_date": today + timedelta(days=14),
 
-            "status": "Upcoming",
+            "status": "Open",
 
             "staff": "rahul@trekgenie.com"
 
@@ -341,7 +341,7 @@ def seed_treks():
 
             "end_date": today - timedelta(days=24),
 
-            "status": "Completed",
+            "status": "Open",
 
             "staff": "arjun@trekgenie.com"
 
@@ -414,6 +414,78 @@ def seed_treks():
             "end_date": today + timedelta(days=11),
 
             "status": "Upcoming",
+
+            "staff": "priya@trekgenie.com"
+
+        },
+
+        {
+
+            "name": "Ratnadurga Fort",
+
+            "location": "Bhandardara",
+
+            "description": "A thrilling valley crossing experience.",
+
+            "difficulty": "Hard",
+
+            "duration": 2,
+
+            "available_slots": 15,
+
+            "start_date": today + timedelta(days=10),
+
+            "end_date": today + timedelta(days=11),
+
+            "status": "Open",
+
+            "staff": "priya@trekgenie.com"
+
+        },
+
+        {
+
+            "name": "Spiti Valley",
+
+            "location": "Bhandardara",
+
+            "description": "A thrilling valley crossing experience.",
+
+            "difficulty": "Hard",
+
+            "duration": 2,
+
+            "available_slots": 15,
+
+            "start_date": today + timedelta(days=10),
+
+            "end_date": today + timedelta(days=11),
+
+            "status": "Open",
+
+            "staff": "priya@trekgenie.com"
+
+        },
+
+        {
+
+            "name": "Bhandardara Trek",
+
+            "location": "Bhandardara",
+
+            "description": "A thrilling valley crossing experience.",
+
+            "difficulty": "Easy",
+
+            "duration": 2,
+
+            "available_slots": 15,
+
+            "start_date": today + timedelta(days=10),
+
+            "end_date": today + timedelta(days=11),
+
+            "status": "Open",
 
             "staff": "priya@trekgenie.com"
 

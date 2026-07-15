@@ -555,34 +555,3 @@ def get_bookings():
         })
 
     return jsonify(result), 200
-
-
-@admin_bp.route("/admin/test-reminder", methods=["POST"])
-@jwt_required()
-@role_required("admin")
-def test_reminder():
-
-    from application.tasks import send_daily_reminders
-
-    send_daily_reminders.delay()
-
-    return jsonify({
-
-        "message": "Reminder task started."
-
-    }), 202
-
-@admin_bp.route("/admin/test-report", methods=["POST"])
-@jwt_required()
-@role_required("admin")
-def test_report():
-
-    from application.tasks import send_monthly_report
-
-    send_monthly_report.delay()
-
-    return jsonify({
-
-        "message": "Monthly report started."
-
-    }), 202
