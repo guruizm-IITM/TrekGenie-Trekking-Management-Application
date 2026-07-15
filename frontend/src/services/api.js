@@ -26,27 +26,27 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
 
-    (response) => {
+    response => response,
 
-        return response;
-
-    },
-
-    (error) => {
+    error => {
 
         if (
 
-            [401, 403, 422].includes(error.response?.status)
+            localStorage.getItem("token") &&
+
+            [401,422].includes(error.response?.status)
 
         ) {
 
-            localStorage.clear()
+            localStorage.clear();
 
-            alert("Your session has expired. Please login again.")
+            alert("Your session has expired. Please login again.");
 
-            window.location.replace("/")
+            window.location.replace("/");
 
         }
+
+        return Promise.reject(error);
 
     }
 
