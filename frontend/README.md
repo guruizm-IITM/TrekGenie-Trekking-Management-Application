@@ -398,3 +398,5 @@ Indian Institute of Technology Madras
 <p align="center">
 Made with ❤️ using Flask, Vue.js, Redis & Celery
 </p>
+
+---
