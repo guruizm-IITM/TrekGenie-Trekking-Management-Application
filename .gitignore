@@ -24,3 +24,9 @@ node_modules/
 
 # macOS
 .DS_Store
+
+#exports
+backend/exports/*.csv
+
+#celery
+backend/celerybeat-schedule
